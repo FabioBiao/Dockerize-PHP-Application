@@ -1,27 +1,32 @@
-#version: "2"
 services:
   # nginx
   web:
-    image: nginx:latest
+    build: 
+      dockerfile: ./nginx/Dockerfile
+    # image not needed as we use build now
+    # image: nginx:latest
     ports:
       - "80:80"
-    volumes:
-      - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+    #volumes:
+    #  - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+    
 
   # php
   app:
     build: 
       dockerfile: ./php/Dockerfile
-    volumes:
-      - ./app:/app
+    # not needed in production
+    # volumes:
+    #  - /var/www/html/vendor # this prevents deleting vendor folder
+    #  - ./app:/var/www/html # this ovewrites everything, so the composer we installed gets removed
 
   # mysql
   db:
       image: mysql:8.0
       volumes:
         - mysqldata:/var/lib/mysql
-      ports:
-        - "3306:3306"
+      # ports:
+      #   - "3306:3306"
       restart: unless-stopped
       environment:
         MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}

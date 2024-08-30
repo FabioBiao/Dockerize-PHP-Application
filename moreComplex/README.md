@@ -10,6 +10,8 @@ cat /etc/nginx/conf.d/default.conf - to look at nginx configuration
 
 - docker compose up -d  (detach mode so we get the terminal back)
 
+- docker compose -f docker-compose.dev.yaml up --env-file 
+
 # php
 alpine minial configuration
 
@@ -18,5 +20,17 @@ docker build -t mytest:php81 -f php/Dockerfile .
 - t set a name "mytest"
 - f sets the path to the docker file folder
 - . from the current location
+- docker exec -it morecomplex-app-1 sh    | go inside container
 
-#
+- docker compose down
+
+run dev composer
+- docker compose -f docker-compose.dev.yaml up --build -d
+
+# run docker compose dev
+- docker compose 
+
+# composer
+install dependencies
+- composer install --ignore-platform-reqs
+- composer dump-autoload | so that autoload will work

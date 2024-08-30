@@ -1,4 +1,28 @@
-<?php ?>
+<?php
+# echo "hello 1";
+
+use App\Repository\TranslationRepository;
+
+require_once dirname(__DIR__) . '/vendor/autoload.php';
+
+$client = \Symfony\Component\Cache\Adapter\RedisAdapter::createConnection(
+    "redis://{$_ENV['REDIS_HOST']}:{$_ENV['REDIS_PORT']}"
+);
+
+$cacheAdapter = new \Symfony\Component\Cache\Adapter\RedisAdapter($client);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    $translationCache = new \App\Cache\TranslationCache($cacheAdapter, new TranslationRepository());
+    $translation = $translationCache->findForLanguage($_POST['language'], $_POST['phrase']) ?: 'Translation not found...';
+
+} else {
+
+    $languageRepository = new \App\Repository\LanguageRepository();
+    $languages = $languageRepository->findAll();
+}
+
+?>
 
 <!doctype html>
 <html lang="en">
@@ -75,7 +99,7 @@
         <h1 class="display-5 fw-bold text-white">Translate This</h1>
         <div class="col-lg-6 mx-auto">
             <?php if ($_SERVER['REQUEST_METHOD'] === 'POST'): ?>
-                <p class="fs-5 mb-4"><?php echo 'Your translation goes here'; ?></p>
+                <p class="fs-5 mb-4"><?php echo $translation; ?></p>
                 <a href="/">Translate another</a>
             <?php else: ?>
 
@@ -86,9 +110,11 @@
                         <div class="col">
                             <select name="language" class="form-select" aria-label="Default select example">
                                 <option selected>Select a language</option>
-                                <option value="1">French</option>
-                                <option value="1">German</option>
-                                <option value="1">Spanish</option>
+                                <?php foreach ($languages as $language): ?>
+                                    <option value="<?php echo $language->getId(); ?>">
+                                        <?php echo $language->getName(); ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="col">
@@ -107,3 +133,4 @@
 </div>
 </body>
 </html>
+
