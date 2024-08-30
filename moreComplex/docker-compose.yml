@@ -3,6 +3,7 @@ services:
   web:
     build: 
       dockerfile: ./nginx/Dockerfile
+      target: app # would only build until the app version on line 35 on php/dockerfile
     # image not needed as we use build now
     # image: nginx:latest
     ports:

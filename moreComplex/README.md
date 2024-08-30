@@ -26,7 +26,6 @@ docker build -t mytest:php81 -f php/Dockerfile .
 
 run dev composer
 - docker compose -f docker-compose.dev.yaml up --build -d
-
 # run docker compose dev
 - docker compose 
 
@@ -34,3 +33,20 @@ run dev composer
 install dependencies
 - composer install --ignore-platform-reqs
 - composer dump-autoload | so that autoload will work
+
+# runninng specific env
+- docker compose -f docker-compose.dev.yaml --env-file .env.local up --build -d
+
+# debugging PHP with php storm
+https://www.youtube.com/watch?v=sSSL8t4LBac&list=PLQH1-k79HB396mS8xRQ5gih5iqkQw-4aV&index=12
+
+
+# pushing to container registry
+- docker login -u username
+- docker build --target app -t garyclarky/php-composer:1.0 -f ./php/dockerfile .
+- docker push garyclarky/php-composer:1.0
+
+
+# test
+- we added tests folder and phpunit.xml
+- we run the tests via github actions

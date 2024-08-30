@@ -11,14 +11,12 @@ services:
     app:
         build:
             dockerfile: ./php/Dockerfile
-            #target: "${BUILD_TARGET:-app}"
+            # target: "app_dev"
+            target: "${BUILD_TARGET:-app}" # this will read from the env file
         volumes:
             #- /var/www/html/vendor 
             - ./app:/var/www/html
-            #- ./php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini:ro
-        #environment:
-            # See https://xdebug.org/docs/all_settings#mode
-            #XDEBUG_MODE: "${XDEBUG_MODE:-off}"
+            - ./php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini:ro
         environment:
             MYSQL_HOST: db   # here we use the service name 
             MYSQL_PORT: ${MYSQL_PORT}
@@ -27,6 +25,9 @@ services:
             MYSQL_USER: ${MYSQL_USER}
             REDIS_HOST: cache  # name of the service
             REDIS_PORT: ${REDIS_PORT}
+            # See https://xdebug.org/docs/all_settings#mode
+            # XDEBUG_MODE: "${XDEBUG_MODE:-off}"
+            XDEBUG_MODE: debug # turns it on
     # mysql
     db:
         image: mysql:8.0

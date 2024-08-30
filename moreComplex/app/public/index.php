@@ -1,5 +1,7 @@
 <?php
 # echo "hello 1";
+# phpinfo();
+# xdebug_info();
 
 use App\Repository\TranslationRepository;
 
